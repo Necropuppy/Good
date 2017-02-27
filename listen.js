@@ -2,7 +2,7 @@ var sys = require('sys');
 var exec = require('child_process').exec;
 function react(error, stdout, stderr){
 	if (stdout.indexOf('origin/master") >= 0) {
-		exec("cd ~/chicken.io && sudo forever restart app.js");
+		exec("cd ~/Good && sudo forever restart app.js");
 	}
 }
 var http = require('http');
