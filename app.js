@@ -2,10 +2,10 @@
 
 // Mongo DB imports and setup
 var mongojs = require("mongojs");
-var db = mongojs('Public:secret@localhost:27017/myGame', ['account','progress']);
+var db = mongojs('Public:Private@localhost:27017/myGame', ['account']);
 
 require('./Entity');
-require('./Map');
+//require('./Map');
 
 // Express imports and setup
 var express = require('express');
@@ -13,7 +13,7 @@ var app = express();
 var serv = require('http').Server(app);
 
 // Loads server-specific config file. config.json should NOT be in the git repo
-var config = require('./config.json');
+//var config = require('./config.json');
 
 // Serves the client folder to the client.
 app.get('/',function(req, res) {
@@ -22,7 +22,7 @@ app.get('/',function(req, res) {
 app.use('/client',express.static(__dirname + '/client'));
 
 // Activates the server on the port in config.json
-serv.listen(config.port);
+serv.listen(8080);
 console.log("Server started.");
 
 // List of connected clients
