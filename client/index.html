@@ -1,0 +1,401 @@
+
+
+
+
+	
+	
+<div id="signDiv">
+	<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  
+  
+  
+      <link rel="stylesheet" href="/client/css/style.css">
+
+  
+</head>
+
+<body>
+  <!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Nanoriot</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+  </head>
+
+  <body class="align">
+  
+  
+
+    <div class="grid">
+	
+		<h1>Lord of Light</h1>
+		<h3>Conflict Eternal</h3>
+
+      <form id="loginForm" class="form login">
+
+        <div class="form__field">
+          <label for="login__username"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">Username</span></label>
+          <input id="signDiv-username" type="text" name="username" class="form__input" placeholder="Username" required>
+        </div>
+
+        <div class="form__field">
+          <label for="login__password"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#lock"></use></svg><span class="hidden">Password</span></label>
+          <input id="signDiv-password" type="password" name="password" class="form__input" placeholder="Password" required>
+        </div>
+
+        <div class="form__field">
+          <input id="signDiv-signIn" type="submit" value="Login">
+        </div>
+		
+		<div class="form__field">
+          <input id="signDiv-signUp" type="submit" value="Register">
+        </div>
+
+      </form>
+
+		
+		<div id="signupPass" style="display:none;">
+			<p id="passText" >Account Registered Successfully</p>
+	  </div>
+	  <div id="loginError" style="display:none;">
+			<p id="errorText" >Incorrect Username or Password</p>
+	  </div>
+	  <div id="signupError" style="display:none;">
+			<p id="errorText" >Username Taken</p>
+	  </div>
+	  
+	  
+    </div>
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="icons"><symbol id="arrow-right" viewBox="0 0 1792 1792"><path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293H245q-52 0-84.5-37.5T128 1024V896q0-53 32.5-90.5T245 768h704L656 474q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z"/></symbol><symbol id="lock" viewBox="0 0 1792 1792"><path d="M640 768h512V576q0-106-75-181t-181-75-181 75-75 181v192zm832 96v576q0 40-28 68t-68 28H416q-40 0-68-28t-28-68V864q0-40 28-68t68-28h32V576q0-184 132-316t316-132 316 132 132 316v192h32q40 0 68 28t28 68z"/></symbol><symbol id="user" viewBox="0 0 1792 1792"><path d="M1600 1405q0 120-73 189.5t-194 69.5H459q-121 0-194-69.5T192 1405q0-53 3.5-103.5t14-109T236 1084t43-97.5 62-81 85.5-53.5T538 832q9 0 42 21.5t74.5 48 108 48T896 971t133.5-21.5 108-48 74.5-48 42-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-320-893q0 159-112.5 271.5T896 896 624.5 783.5 512 512t112.5-271.5T896 128t271.5 112.5T1280 512z"/></symbol></svg>
+
+  </body>
+
+</html>
+  
+  
+</body>
+</html>
+
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	<div id="gameDiv" style="display:none; position:absolute;">
+		<canvas id="ctx" width="500" height="500" style="border:1px solid #000000;"></canvas>
+
+		<div id="chat-text" style="width:500px;height:100px;overflow-y:hidden">
+			<div>Hello!</div>
+		</div>
+
+		<form id="chat-form">
+			<input id="chat-input" type="text" style="width:500px"></input>
+		</form>
+	</div>
+	
+	
+</body>
+
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script>
+	var WIDTH = 500;
+	var HEIGHT = 500;
+	var socket = io();
+
+	//sign
+	var signDiv = document.getElementById('signDiv');
+	var signDivUsername = document.getElementById('signDiv-username');
+	var signDivSignIn = document.getElementById('signDiv-signIn');
+	var signDivSignUp = document.getElementById('signDiv-signUp');
+	var signDivPassword = document.getElementById('signDiv-password');
+	
+	var loginForm = document.getElementById('loginForm');
+	
+	var loginError = document.getElementById('loginError');
+	var signupError = document.getElementById('signupError');
+	var signupPass = document.getElementById('signupPass');
+
+	loginForm.onsubmit = function(e){
+		e.preventDefault();
+		socket.emit('signIn',{username:signDivUsername.value,password:signDivPassword.value});
+	}
+	signDivSignUp.onclick = function(){
+		socket.emit('signUp',{username:signDivUsername.value,password:signDivPassword.value});
+	}
+	socket.on('signInResponse',function(data){
+		if(data.success){
+			//alert("Sign up successul.");
+			signDiv.style.display = 'none';
+			gameDiv.style.display = 'inline-block';
+		} else
+			//alert("Sign in unsuccessul.");
+			signupError.style.display = 'none';
+			signupPass.style.display = 'none';
+			loginError.style.display = 'inline';
+	});
+	socket.on('signUpResponse',function(data){
+		if(data.success){
+			
+			
+			signupError.style.display = 'none';
+			loginError.style.display = 'none';
+			signupPass.style.display = 'inline';
+		
+		
+		} else {
+			//alert("Sign up unsuccessul.");
+			signupPass.style.display = 'none';
+			loginError.style.display = 'none';
+			signupError.style.display = 'inline';
+		}
+	});
+
+	//chat
+	var chatText = document.getElementById('chat-text');
+	var chatInput = document.getElementById('chat-input');
+	var chatForm = document.getElementById('chat-form');
+
+	socket.on('addToChat',function(data){
+		chatText.innerHTML += '<div >' + data + '</div>';
+		chatText.scrollTop = chatText.scrollHeight;
+	});
+	socket.on('evalAnswer',function(data){
+		console.log(data);
+	});
+
+
+	chatForm.onsubmit = function(e){
+		e.preventDefault();
+		if(chatInput.value[0] === '/')
+			socket.emit('evalServer',chatInput.value.slice(1));
+		else
+			socket.emit('sendMsgToServer',chatInput.value);
+		chatInput.value = '';
+	}
+
+	//game
+	var Img = {};
+	Img.player = new Image();
+	Img.player.src = '/client/img/player.png';
+	Img.bullet = new Image();
+	Img.bullet.src = '/client/img/bullet.png';
+	Img.map = new Image();
+	Img.map.src = '/client/img/map.png';
+
+	var ctx = document.getElementById("ctx").getContext("2d");
+	ctx.font = '30px Arial';
+
+	var Player = function(initPack){
+		var self = {};
+		self.id = initPack.id;
+		self.number = initPack.number;
+		self.x = initPack.x;
+		self.y = initPack.y;
+		self.hp = initPack.hp;
+		self.hpMax = initPack.hpMax;
+		self.score = initPack.score;
+
+		self.draw = function(){
+			var x = self.x - Player.list[selfId].x + WIDTH/2;
+			var y = self.y - Player.list[selfId].y + HEIGHT/2;
+
+			var hpWidth = 30 * self.hp / self.hpMax;
+			ctx.fillStyle = 'red';
+			ctx.fillRect(x - hpWidth/2,y - 40,hpWidth,4);
+
+			var width = Img.player.width*2;
+			var height = Img.player.height*2;
+
+			ctx.fillStyle = 'blue';
+			ctx.fillRect(x-width/2 + 10,y-height/2 + 10,Img.player.width,Img.player.height);
+			//ctx.fillStyle = 'black';
+			//ctx.fillText(5,x-width/2,y-height/2);
+			//ctx.drawImage(Img.player,
+				//0,0,Img.player.width,Img.player.height,
+				//x-width/2,y-height/2,width,height);
+
+			//ctx.fillText(self.score,self.x,self.y-60);
+		}
+
+		Player.list[self.id] = self;
+
+
+		return self;
+	}
+	Player.list = {};
+
+
+	var Bullet = function(initPack){
+		var self = {};
+		self.id = initPack.id;
+		self.x = initPack.x;
+		self.y = initPack.y;
+
+		self.draw = function(){
+			var width = Img.bullet.width/2;
+			var height = Img.bullet.height/2;
+
+			var x = self.x - Player.list[selfId].x + WIDTH/2;
+			var y = self.y - Player.list[selfId].y + HEIGHT/2;
+
+			ctx.drawImage(Img.bullet,
+				0,0,Img.bullet.width,Img.bullet.height,
+				x-width/2,y-height/2,width,height);
+		}
+
+		Bullet.list[self.id] = self;
+		return self;
+	}
+	Bullet.list = {};
+
+	var selfId = null;
+
+	socket.on('init',function(data){
+		if(data.selfId)
+			selfId = data.selfId;
+		//{ player : [{id:123,number:'1',x:0,y:0},{id:1,number:'2',x:0,y:0}], bullet: []}
+		for(var i = 0 ; i < data.player.length; i++){
+			new Player(data.player[i]);
+		}
+		for(var i = 0 ; i < data.bullet.length; i++){
+			new Bullet(data.bullet[i]);
+		}
+	});
+
+	socket.on('update',function(data){
+		//{ player : [{id:123,x:0,y:0},{id:1,x:0,y:0}], bullet: []}
+		for(var i = 0 ; i < data.player.length; i++){
+			var pack = data.player[i];
+			var p = Player.list[pack.id];
+			if(p){
+				if(pack.x !== undefined)
+					p.x = pack.x;
+				if(pack.y !== undefined)
+					p.y = pack.y;
+				if(pack.hp !== undefined)
+					p.hp = pack.hp;
+				if(pack.score !== undefined)
+					p.score = pack.score;
+			}
+		}
+		for(var i = 0 ; i < data.bullet.length; i++){
+			var pack = data.bullet[i];
+			var b = Bullet.list[data.bullet[i].id];
+			if(b){
+				if(pack.x !== undefined)
+					b.x = pack.x;
+				if(pack.y !== undefined)
+					b.y = pack.y;
+			}
+		}
+	});
+
+	socket.on('remove',function(data){
+		//{player:[12323],bullet:[12323,123123]}
+		for(var i = 0 ; i < data.player.length; i++){
+			delete Player.list[data.player[i]];
+		}
+		for(var i = 0 ; i < data.bullet.length; i++){
+			delete Bullet.list[data.bullet[i]];
+		}
+	});
+
+	setInterval(function(){
+		if(!selfId)
+			return;
+		ctx.clearRect(0,0,500,500);
+		drawMap();
+		drawScore();
+		for(var i in Player.list)
+			Player.list[i].draw();
+		for(var i in Bullet.list)
+			Bullet.list[i].draw();
+	},40);
+
+	var drawMap = function(){
+		var x = WIDTH/2 - Player.list[selfId].x;
+		var y = HEIGHT/2 - Player.list[selfId].y;
+		ctx.drawImage(Img.map,x,y);
+	}
+
+	var drawScore = function(){
+		ctx.fillStyle = 'black';
+		ctx.fillText(Player.list[selfId].score,0,30);
+	}
+
+	document.onkeydown = function(event){
+		if(event.keyCode === 68)	//d
+			socket.emit('keyPress',{inputId:'right',state:true});
+		else if(event.keyCode === 83)	//s
+			socket.emit('keyPress',{inputId:'down',state:true});
+		else if(event.keyCode === 65) //a
+			socket.emit('keyPress',{inputId:'left',state:true});
+		else if(event.keyCode === 87) // w
+			socket.emit('keyPress',{inputId:'up',state:true});
+
+	}
+	document.onkeyup = function(event){
+		if(event.keyCode === 68)	//d
+			socket.emit('keyPress',{inputId:'right',state:false});
+		else if(event.keyCode === 83)	//s
+			socket.emit('keyPress',{inputId:'down',state:false});
+		else if(event.keyCode === 65) //a
+			socket.emit('keyPress',{inputId:'left',state:false});
+		else if(event.keyCode === 87) // w
+			socket.emit('keyPress',{inputId:'up',state:false});
+	}
+
+	document.onmousedown = function(event){
+		socket.emit('keyPress',{inputId:'attack',state:true});
+	}
+	document.onmouseup = function(event){
+		socket.emit('keyPress',{inputId:'attack',state:false});
+	}
+	document.onmousemove = function(event){
+	
+		//var rect = ct.getBoundingClientRect();
+		//var top = rect.top;
+		//var right = rect.right;
+		var width = document.documentElement.clientWidth;
+        var height = document.documentElement.clientHeight;
+	
+		var x =-(width/2) + event.clientX - 8;
+		var y = -(height/2) + 50 + event.clientY - 8;
+		var angle = Math.atan2(y,x) / Math.PI * 180;
+		socket.emit('keyPress',{inputId:'mouseAngle',state:angle});
+	}
+
+
+
+
+</script>
