@@ -9,7 +9,7 @@ var http = require('http');
 var sleep = require('sleep');
 
 http.createServer(function (require, response){
-	exec("cd ~/Good && git pull" , react);
+	exec("cd ~/Good && sudo git pull" , react);
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	response.write('Pulling...');
 	response.end();
