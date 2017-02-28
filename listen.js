@@ -1,7 +1,7 @@
 var sys = require('sys');
 var exec = require('child_process').exec;
 function react(error, stdout, stderr){
-	if (stdout.indexOf("origin/master") >= 0) {
+	if (stdout.indexOf('origin/master') >= 0) {
 		exec("cd ~/Good && sudo forever restart app.js");
 	}
 }
